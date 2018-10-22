@@ -25,6 +25,7 @@ import org.apache.druid.java.util.emitter.service.ServiceEmitter;
 import org.apache.druid.query.GenericQueryMetricsFactory;
 import org.apache.druid.query.QuerySegmentWalker;
 import org.apache.druid.query.QueryToolChestWarehouse;
+import org.apache.druid.server.coordination.ZkCoordinator;
 import org.apache.druid.server.log.RequestLogger;
 import org.apache.druid.server.security.AuthConfig;
 import org.apache.druid.server.security.AuthorizerMapper;
@@ -38,6 +39,7 @@ public class QueryLifecycleFactory
   private final ServiceEmitter emitter;
   private final RequestLogger requestLogger;
   private final AuthorizerMapper authorizerMapper;
+  private final ZkCoordinator coordinator;
 
   @Inject
   public QueryLifecycleFactory(
@@ -47,7 +49,8 @@ public class QueryLifecycleFactory
       final ServiceEmitter emitter,
       final RequestLogger requestLogger,
       final AuthConfig authConfig,
-      final AuthorizerMapper authorizerMapper
+      final AuthorizerMapper authorizerMapper,
+      final ZkCoordinator coordinator
   )
   {
     this.warehouse = warehouse;
@@ -56,6 +59,7 @@ public class QueryLifecycleFactory
     this.emitter = emitter;
     this.requestLogger = requestLogger;
     this.authorizerMapper = authorizerMapper;
+    this.coordinator = coordinator;
   }
 
   public QueryLifecycle factorize()
@@ -67,6 +71,7 @@ public class QueryLifecycleFactory
         emitter,
         requestLogger,
         authorizerMapper,
+        coordinator,
         System.currentTimeMillis(),
         System.nanoTime()
     );

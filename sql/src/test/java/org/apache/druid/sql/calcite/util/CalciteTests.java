@@ -477,7 +477,8 @@ public class CalciteTests
         new ServiceEmitter("dummy", "dummy", new NoopEmitter()),
         new NoopRequestLogger(),
         new AuthConfig(),
-        TEST_AUTHORIZER_MAPPER
+        TEST_AUTHORIZER_MAPPER,
+        null
     );
   }
 

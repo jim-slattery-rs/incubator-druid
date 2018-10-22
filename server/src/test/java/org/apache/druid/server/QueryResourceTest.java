@@ -140,7 +140,8 @@ public class QueryResourceTest
             new NoopServiceEmitter(),
             testRequestLogger,
             new AuthConfig(),
-            AuthTestUtils.TEST_AUTHORIZER_MAPPER
+            AuthTestUtils.TEST_AUTHORIZER_MAPPER,
+            null
         ),
         jsonMapper,
         jsonMapper,
@@ -362,7 +363,8 @@ public class QueryResourceTest
             new NoopServiceEmitter(),
             testRequestLogger,
             new AuthConfig(),
-            authMapper
+            authMapper,
+            null
         ),
         jsonMapper,
         jsonMapper,
@@ -471,7 +473,8 @@ public class QueryResourceTest
             new NoopServiceEmitter(),
             testRequestLogger,
             new AuthConfig(),
-            authMapper
+            authMapper,
+            null
         ),
         jsonMapper,
         jsonMapper,
@@ -593,7 +596,8 @@ public class QueryResourceTest
             new NoopServiceEmitter(),
             testRequestLogger,
             new AuthConfig(),
-            authMapper
+            authMapper,
+            null
         ),
         jsonMapper,
         jsonMapper,

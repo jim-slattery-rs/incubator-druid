@@ -40,6 +40,7 @@ import org.apache.druid.query.QueryPlus;
 import org.apache.druid.query.QuerySegmentWalker;
 import org.apache.druid.query.QueryToolChest;
 import org.apache.druid.query.QueryToolChestWarehouse;
+import org.apache.druid.server.coordination.ZkCoordinator;
 import org.apache.druid.server.log.RequestLogger;
 import org.apache.druid.server.security.Access;
 import org.apache.druid.server.security.AuthenticationResult;
@@ -76,6 +77,7 @@ public class QueryLifecycle
   private final ServiceEmitter emitter;
   private final RequestLogger requestLogger;
   private final AuthorizerMapper authorizerMapper;
+  private final ZkCoordinator coordinator;
   private final long startMs;
   private final long startNs;
 
@@ -91,6 +93,7 @@ public class QueryLifecycle
       final ServiceEmitter emitter,
       final RequestLogger requestLogger,
       final AuthorizerMapper authorizerMapper,
+      final ZkCoordinator coordinator,
       final long startMs,
       final long startNs
   )
@@ -101,6 +104,7 @@ public class QueryLifecycle
     this.emitter = emitter;
     this.requestLogger = requestLogger;
     this.authorizerMapper = authorizerMapper;
+    this.coordinator = coordinator;
     this.startMs = startMs;
     this.startNs = startNs;
   }
@@ -162,6 +166,12 @@ public class QueryLifecycle
   @SuppressWarnings("unchecked")
   public void initialize(final Query baseQuery)
   {
+    // if this is a historical node, does `/readiness` indicate it is ready for queries?
+    if (this.coordinator != null && !this.coordinator.isStarted()) {
+      // TODO: return an exception that will get translated to a `503 Service Unavailable` response to the caller
+      throw new RuntimeException("503 Service Unavailable");
+    }
+
     transition(State.NEW, State.INITIALIZED);
 
     String queryId = baseQuery.getId();
